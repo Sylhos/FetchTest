@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<dictionary>
+  <item>
+    <key>
+      <string>0da2c988-37a1-461c-bad4-afe4930c3157.Bitbucket Password</string>
+    </key>
+    <value>
+      <string />
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>0da2c988-37a1-461c-bad4-afe4930c3157.Bitbucket Username</string>
+    </key>
+    <value>
+      <string />
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>0da2c988-37a1-461c-bad4-afe4930c3157.Specify the base URL to Bitbucket</string>
+    </key>
+    <value>
+      <string />
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>2ec3e1f0-ef37-413f-bea5-b8fe1f9c505c.OAuth Token</string>
+    </key>
+    <value>
+      <string>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</string>
+    </value>
+  </item>
+</dictionary>
