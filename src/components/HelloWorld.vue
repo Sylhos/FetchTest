@@ -3,21 +3,7 @@
 import { useFetchApi, useFetchApiCache } from './UseFetchApi';
 const props = defineProps({
   msg: String
-})/*
-const resp = useFetchApi("https://localhost:7295/settings", {
-  headers: {
-    "App-Token": "PMAK-62af236b9ee80012b9c3dadb-e07f0dfafff3214317f44bd78ae30b73c3"
-  }*/
-const resp = useFetchApiCache("Theme", "https://localhost:7295/settings", {
-  headers: {
-    "App-Token": "PMAK-62af236b9ee80012b9c3dadb-e07f0dfafff3214317f44bd78ae30b73c3"
-  }
-});
-const resp2 = useFetchApiCache("Theme", "https://localhost:7295/settings", {
-  headers: {
-    "App-Token": "PMAK-62af236b9ee80012b9c3dadb-e07f0dfafff3214317f44bd78ae30b73c3"
-  }
-});
+})
 
 </script>
 
