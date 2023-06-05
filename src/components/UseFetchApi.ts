@@ -27,18 +27,20 @@ class FetchApiResponse implements IFetchApiResponse {
     this.fetchAsync = fetchAsync;
   }
 }
+const cacheMap = reactive(new Map());
 export const useFetchApi = (
   url: string,
   config: { headers?: object; skip?: boolean } = { skip: false }
 ): IFetchApiResponse => {
   const data = ref(null);
-  const response = ref({});
+  const response = ref(new Response());
   const error = ref();
   const loading = ref(false);
   const fetchAsync = async () => {
     loading.value = true;
     try {
       response.value = await fetch(url, config as RequestInit);
+      error.value = response.value.statusText;
     } catch (ex) {
       error.value = ex;
     } finally {
@@ -49,9 +51,7 @@ export const useFetchApi = (
   return new FetchApiResponse(response, error, data, loading, fetchAsync);
 };
 
-const cacheMap = reactive(new Map());
-
-export const fetchApiCache = (
+export const useFetchApiCache = async (
   key: string,
   url: string,
   config: { skip: boolean }
@@ -62,11 +62,12 @@ export const fetchApiCache = (
   const update = () => cacheMap.set(key, info.response.value);
   const clear = () => cacheMap.set(key, undefined);
 
-  const fetch = async () => {
+  const fetchAsync = async () => {
     try {
       await info.fetchAsync();
       update();
     } catch {
+      console.log("clear");
       clear();
     }
   };
@@ -74,7 +75,7 @@ export const fetchApiCache = (
   const response = computed(() => cacheMap.get(key));
   const data = computed(() => response.value?.data);
 
-  if (response.value == null) fetch();
+  response.value == null && (await fetchAsync()); /* await? por corregir */
 
   return { ...info, fetch, data, response, clear };
 };
