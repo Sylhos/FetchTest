@@ -1,15 +1,36 @@
 <!-- eslint-disable no-undef -->
 <script setup lang="ts">
-import { useFetchApi, useFetchApiCache } from './UseFetchApi';
+import { ref } from 'vue';
+import { useFetchApiCache } from './UseFetchApi';
 const props = defineProps({
   msg: String
 })
+const fetched1 = ref<any>(null)
+/*
+const resp = useFetchApi("https://localhost:7295/settings", {
+  headers: {
+    "App-Token": "PMAK-62af236b9ee80012b9c3dadb-e07f0dfafff3214317f44bd78ae30b73c3"
+  }*/
+
+useFetchApiCache("Theme", "https://localhost:7295/settings", {
+  headers: {
+    "App-Token": "PMAK-62af236b9ee80012b9c3dadb-e07f0dfafff3214317f44bd78ae30b73c3"
+  }
+}).then((data) => {
+  fetched1.value = data;
+  useFetchApiCache("Theme", "https://localhost:7295/settings", {
+    headers: {
+      "App-Token": "PMAK-62af236b9ee80012b9c3dadb-e07f0dfafff3214317f44bd78ae30b73c3"
+    }
+  });
+});
+
 
 </script>
 
 <template>
   <div class="hello">
-    <h1>{{ resp.error.value }}</h1>
+    <h1>{{ fetched1?.value?.OrgId }}</h1>
     <h1>{{ msg }}</h1>
     <p>
       For a guide and recipes on how to configure / customize this project,<br>

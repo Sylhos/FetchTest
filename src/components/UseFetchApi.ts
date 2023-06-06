@@ -1,4 +1,4 @@
-import { ref, computed, reactive, Ref } from "vue";
+import { ref, reactive, Ref } from "vue";
 interface IFetchApiResponse {
   response: Ref;
   error: Ref;
@@ -28,12 +28,13 @@ class FetchApiResponse implements IFetchApiResponse {
   }
 }
 const cacheMap = reactive(new Map());
+
 export const useFetchApi = (
   url: string,
   config: { headers?: object; skip?: boolean } = { skip: false }
 ): IFetchApiResponse => {
-  const data = ref(null);
-  const response = ref(new Response());
+  const data = ref();
+  const response = ref<Response>();
   const error = ref();
   const loading = ref(false);
   const fetchAsync = async () => {
@@ -41,6 +42,8 @@ export const useFetchApi = (
     try {
       response.value = await fetch(url, config as RequestInit);
       error.value = response.value.statusText;
+      if (!response.value.ok) return;
+      data.value = await response.value.json();
     } catch (ex) {
       error.value = ex;
     } finally {
@@ -55,29 +58,33 @@ export const useFetchApiCache = async (
   key: string,
   url: string,
   config: { skip: boolean }
-) => {
+): Promise<IFetchApiResponse> => {
   config.skip = true;
-  const info = useFetchApi(url, config);
 
-  const update = () => cacheMap.set(key, info.response.value);
+  const info = useFetchApi(url, config);
+  console.log(...cacheMap);
+  const update = () => {
+    console.log("saving " + info.data.value);
+    cacheMap.set(key, info.data.value);
+  };
   const clear = () => cacheMap.set(key, undefined);
 
-  const fetchAsync = async () => {
+  const directFetch = async () => {
     try {
+      console.log("direct!");
       await info.fetchAsync();
       update();
     } catch {
-      console.log("clear");
       clear();
     }
   };
 
-  const response = computed(() => cacheMap.get(key));
-  const data = computed(() => response.value?.data);
+  const response = ref(cacheMap.get(key));
+  const data = ref(response.value?.data);
+  console.log(response.value);
+  !response.value && (await directFetch());
 
-  response.value == null && (await fetchAsync()); /* await? por corregir */
-
-  return { ...info, fetch, data, response, clear };
+  return { ...info, data, response };
 };
 
 export const usePost = (
