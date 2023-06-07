@@ -6,31 +6,29 @@ const props = defineProps({
   msg: String
 })
 const fetched1 = ref<any>(null)
-/*
-const resp = useFetchApi("https://localhost:7295/settings", {
-  headers: {
-    "App-Token": "PMAK-62af236b9ee80012b9c3dadb-e07f0dfafff3214317f44bd78ae30b73c3"
-  }*/
+const fetched2 = ref<any>(null)
 
-useFetchApiCache("Theme", "https://localhost:7295/settings", {
+const response = useFetchApiCache("Theme", "https://localhost:7295/settings", {
   headers: {
-    "App-Token": "PMAK-62af236b9ee80012b9c3dadb-e07f0dfafff3214317f44bd78ae30b73c3"
+    "App-Token": "3"
   }
-}).then((data) => {
-  fetched1.value = data;
-  useFetchApiCache("Theme", "https://localhost:7295/settings", {
-    headers: {
-      "App-Token": "PMAK-62af236b9ee80012b9c3dadb-e07f0dfafff3214317f44bd78ae30b73c3"
-    }
-  });
 });
 
+fetched1.value = response.data;
+
+const response2 = useFetchApiCache("Theme", "https://localhost:7295/settings", {
+  headers: {
+    "App-Token": "3"
+  }
+});
+fetched2.value = response.data;
 
 </script>
 
 <template>
   <div class="hello">
     <h1>{{ fetched1?.value?.OrgId }}</h1>
+    <h1>{{ fetched2?.value?.OrgId }}</h1>
     <h1>{{ msg }}</h1>
     <p>
       For a guide and recipes on how to configure / customize this project,<br>

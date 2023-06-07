@@ -54,19 +54,16 @@ export const useFetchApi = (
   return new FetchApiResponse(response, error, data, loading, fetchAsync);
 };
 
-export const useFetchApiCache = async (
+export const useFetchApiCache = (
   key: string,
   url: string,
   config: { skip: boolean }
-): Promise<IFetchApiResponse> => {
+): IFetchApiResponse => {
   config.skip = true;
 
   const info = useFetchApi(url, config);
-  console.log(...cacheMap);
-  const update = () => {
-    console.log("saving " + info.data.value);
-    cacheMap.set(key, info.data.value);
-  };
+
+  const update = () => cacheMap.set(key, info.data.value);
   const clear = () => cacheMap.set(key, undefined);
 
   const directFetch = async () => {
@@ -80,11 +77,10 @@ export const useFetchApiCache = async (
   };
 
   const response = ref(cacheMap.get(key));
-  const data = ref(response.value?.data);
-  console.log(response.value);
-  !response.value && (await directFetch());
 
-  return { ...info, data, response };
+  !response.value && directFetch();
+
+  return info;
 };
 
 export const usePost = (
