@@ -1,28 +1,37 @@
 <!-- eslint-disable no-undef -->
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useFetchApiCache } from './UseFetchApi';
+import { useFetchApiCache, useFetchApi } from './UseFetchApi';
 const props = defineProps({
   msg: String
 })
 const fetched1 = ref<any>(null)
 const fetched2 = ref<any>(null)
 
-const response = useFetchApiCache("Theme", "https://localhost:7295/settings", {
+useFetchApiCache("Theme", "https://localhost:7295/settings", {
   headers: {
     "App-Token": "3"
   }
-});
-
+}).then((response) => {
+  fetched1.value = response.data;
+  const response2 = useFetchApiCache("Theme", "https://localhost:7295/settings", {
+    headers: {
+      "App-Token": "3"
+    }
+  }).then((response2) => {
+    fetched2.value = response.data;
+  })
+})
+/*
 fetched1.value = response.data;
 
-const response2 = useFetchApiCache("Theme", "https://localhost:7295/settings", {
+const response2 = await useFetchApi("Theme", "https://localhost:7295/settings", {
   headers: {
     "App-Token": "3"
   }
 });
 fetched2.value = response.data;
-
+*/
 </script>
 
 <template>
